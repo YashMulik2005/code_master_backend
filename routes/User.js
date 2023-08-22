@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/sighup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const { data } = req.body;
 

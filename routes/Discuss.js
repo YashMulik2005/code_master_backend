@@ -135,4 +135,27 @@ router.post("/userans", async (req, res) => {
   }
 });
 
+router.post("/search", async (req, res) => {
+  const { data } = req.body;
+  console.log(data.search);
+  try {
+    const result = await DiscussQuestionModel.find({
+      heading: { $regex: ".*" + data.search + ".*", $options: "i" },
+    });
+    if (result.length > 0) {
+      res.status(200).json({
+        data: { result },
+      });
+    } else {
+      res.status(200).json({
+        data: { msg: "no data found", result },
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      data: { error: err },
+    });
+  }
+});
+
 module.exports = router;
