@@ -149,17 +149,28 @@ router.post("/solved", async (req, res) => {
     console.log(data.username);
     console.log(data.id);
 
-    const questionTrack = new QuestionTrackModel({
+    const resp = await QuestionTrackModel.find({
       q_id: data.id,
       u_id: data.username,
-      status: "solved",
     });
 
-    await questionTrack.save();
+    if (resp.length >= 1) {
+      return res.status(200).json({
+        data: { success: true },
+      });
+    } else {
+      const questionTrack = new QuestionTrackModel({
+        q_id: data.id,
+        u_id: data.username,
+        status: "solved",
+      });
 
-    return res.status(200).json({
-      data: { success: true },
-    });
+      await questionTrack.save();
+
+      return res.status(200).json({
+        data: { success: true },
+      });
+    }
   } catch (err) {
     console.log(err);
     return res.status(400).json({

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const UserModel = require("../models/user");
+const QuestionTrackModel = require("../models/question_track");
+const DiscussQuestionModel = require("../models/forumQuestion");
+const DiscussAnsModel = require("../models/forumAns");
 // const CertificateModel = require("../models/certificate");
 // const QuestionModel = require("../models/question");
 // const QuestionTrackModel = require("../models/question_track");
@@ -86,6 +89,35 @@ router.post("/signup", async (req, res) => {
 
     return res.status(200).json({
       data: { success: true },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      data: { error: err },
+    });
+  }
+});
+
+router.post("/profile", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const userdata = await UserModel.find({ username: username });
+
+    const userque = await QuestionTrackModel.find({ u_id: username });
+    const quecount = userque.length;
+
+    const que = await DiscussQuestionModel.find({ user: username });
+
+    const ans = await DiscussAnsModel.find({ user: username });
+
+    return res.status(200).json({
+      data: {
+        user: userdata,
+        quecount: quecount,
+        fque: que.length,
+        fans: ans.length,
+        que: que,
+      },
     });
   } catch (err) {
     console.log(err);
