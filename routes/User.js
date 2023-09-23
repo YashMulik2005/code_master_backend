@@ -127,4 +127,28 @@ router.post("/profile", async (req, res) => {
   }
 });
 
+router.post("/search", async (req, res) => {
+  const { search } = req.body;
+  console.log(search);
+  try {
+    const result = await UserModel.find({
+      username: { $regex: ".*" + search + ".*", $options: "i" },
+    });
+
+    if (result.length > 0) {
+      res.status(200).json({
+        data: { result },
+      });
+    } else {
+      res.status(200).json({
+        data: { msg: "no data found", result },
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      data: { error: err },
+    });
+  }
+});
+
 module.exports = router;

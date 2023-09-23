@@ -5,6 +5,25 @@ const CertificateTrackModel = require("../models/certificate_track");
 const CertificateQueTrackModel = require("../models/certificate_que_track");
 const QuestionModel = require("../models/question");
 
+router.post("/add", async (req, res) => {
+  try {
+    const { name, link } = req.body;
+
+    const result = new CertificateModel({
+      name: name,
+      link: link,
+    });
+    await result.save();
+    return res.status(200).json({
+      data: { success: true },
+    });
+  } catch (err) {
+    return res.status(400).json({
+      data: { err: "not enter" },
+    });
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const { data } = req.body;
