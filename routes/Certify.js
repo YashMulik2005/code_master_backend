@@ -63,6 +63,26 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/clearall", async (req, res) => {
+  try {
+    const { data } = req.body;
+
+    const result = await CertificateQueTrackModel.deleteMany({
+      c_id: data.c_id,
+      u_id: data.username,
+    });
+
+    return res.status(200).json({
+      data: { success: true },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      data: { err: "enable to delete" },
+    });
+  }
+});
+
 router.post("/dashboard", async (req, res) => {
   try {
     const { data } = req.body;
