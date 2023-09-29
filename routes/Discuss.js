@@ -28,7 +28,7 @@ router.post("/add", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    let result = await DiscussQuestionModel.find();
+    let result = await DiscussQuestionModel.find().sort({ timestamp: -1 });
     return res.status(200).json({
       data: { result },
     });
@@ -49,7 +49,9 @@ router.post("/userpost", async (req, res) => {
         data: { Notlogin: true },
       });
     }
-    const result = await DiscussQuestionModel.find({ user: data.username });
+    const result = await DiscussQuestionModel.find({
+      user: data.username,
+    }).sort({ timestamp: -1 });
     return res.status(200).json({
       data: { result },
     });
@@ -102,7 +104,9 @@ router.post("/addans", async (req, res) => {
 router.post("/getans", async (req, res) => {
   const { data } = req.body;
   try {
-    let result = await DiscussAnsModel.find({ q_id: data.q_id });
+    let result = await DiscussAnsModel.find({ q_id: data.q_id }).sort({
+      timestamp: -1,
+    });
     return res.status(200).json({
       data: { result },
     });
@@ -123,7 +127,9 @@ router.post("/userans", async (req, res) => {
         data: { Notlogin: true },
       });
     }
-    const result = await DiscussAnsModel.find({ user: data.username });
+    const result = await DiscussAnsModel.find({ user: data.username }).sort({
+      timestamp: -1,
+    });
     return res.status(200).json({
       data: { result },
     });

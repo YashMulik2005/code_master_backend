@@ -106,7 +106,9 @@ router.post("/profile", async (req, res) => {
     const userque = await QuestionTrackModel.find({ u_id: username });
     const quecount = userque.length;
 
-    const que = await DiscussQuestionModel.find({ user: username });
+    const que = await DiscussQuestionModel.find({ user: username }).sort({
+      timestamp: -1,
+    });
 
     const ans = await DiscussAnsModel.find({ user: username });
 

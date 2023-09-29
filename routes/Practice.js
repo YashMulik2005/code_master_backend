@@ -179,4 +179,30 @@ router.post("/solved", async (req, res) => {
   }
 });
 
+router.post("/search", async (req, res) => {
+  try {
+    const { data } = req.body;
+    console.log(data);
+
+    const result = await QuestionModel.find({
+      name: { $regex: ".*" + data.searchtext + ".*", $options: "i" },
+    });
+
+    if (result.length > 0) {
+      return res.status(200).json({
+        data: { result },
+      });
+    }
+
+    return res.status(200).json({
+      data: { msg: "data not found", result },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      data: { error: err },
+    });
+  }
+});
+
 module.exports = router;
