@@ -47,33 +47,58 @@ router.post("/add", async (req, res) => {
 
 router.post("/compiler", async (req, res) => {
   const { requestdata } = req.body;
-  console.log(requestdata);
 
-  const options = {
-    method: "POST",
-    url: "https://online-code-compiler.p.rapidapi.com/v1/",
-    headers: {
-      "content-type": "application/json",
-      "X-RapidAPI-Key": "639e388a10msh3ccd60adff600b9p1f174djsn211b87c4474a",
-      "X-RapidAPI-Host": "online-code-compiler.p.rapidapi.com",
-    },
-    data: {
-      language: requestdata.language,
-      version: "latest",
-      code: requestdata.code,
-      input: requestdata.input,
-    },
-  };
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  let url =
+    "https://api.hackerearth.com/v4/partner/code-evaluation/submissions/";
 
   try {
-    const response = await axios.request(options);
+    const response = await axios.post(
+      url,
+      {
+        lang: requestdata.language,
+        source: requestdata.code,
+        input: requestdata.input,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "client-secret": "b1d1028bdeb82b9936bd041e239db123b3113912",
+        },
+      }
+    );
+
+    url = response.data.status_update_url;
+    await delay(2000);
+
+    const outputResponse = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "client-secret": "b1d1028bdeb82b9936bd041e239db123b3113912",
+      },
+    });
+    console.log(outputResponse.data?.result?.compile_status);
+    if (outputResponse.data?.result?.compile_status != "OK") {
+      return res.status(200).json({
+        data: outputResponse.data?.result?.compile_status,
+      });
+    }
+    url = outputResponse.data?.result?.run_status?.output;
+    const output = await axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "client-secret": "b1d1028bdeb82b9936bd041e239db123b3113912",
+      },
+    });
+    console.log(output);
+
     return res.status(200).json({
-      data: { result: response.data },
+      data: output.data,
     });
   } catch (error) {
-    // console.log(error);
     return res.status(400).json({
-      data: { err: error },
+      error: error.response ? error.response.data : error.message,
     });
   }
 });
