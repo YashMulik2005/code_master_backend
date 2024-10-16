@@ -70,7 +70,11 @@ router.post("/compiler", async (req, res) => {
     );
 
     url = response.data.status_update_url;
-    await delay(2000);
+    if (requestdata.language == "JAVA8") {
+      await delay(5000);
+    } else {
+      await delay(2000);
+    }
 
     const outputResponse = await axios.get(url, {
       headers: {
