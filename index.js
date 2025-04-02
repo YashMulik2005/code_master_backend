@@ -15,8 +15,9 @@ const discussRoute = require("./routes/Discuss");
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://mastercode.netlify.app",
+    // origin: "https://mastercode.netlify.app",
     // origin: "*",
+    origin: ["https://mastercode.netlify.app", "https://mad-frontend.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true,
     optionSuccessStatus: 200,
