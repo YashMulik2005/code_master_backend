@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 mongoose.set("strictQuery", false);
 var db =
-  "mongodb+srv://yashmulik95:RbzhKy87YXa3L59T@cluster0.zijivgh.mongodb.net/code_master?retryWrites=true&w=majority";
+  "";
 
 mongoose
   .connect(db, {
